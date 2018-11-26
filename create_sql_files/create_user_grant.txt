@@ -1,0 +1,5 @@
+--drop user
+drop user 'user_coffee2'@'%';
+drop user 'user_coffee2'@'localhost';
+
+grant select, insert, update, delete,trigger on coffee2.*to 'user_coffee2'@'%' identified by

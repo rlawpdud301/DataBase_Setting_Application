@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- # Log Level 
+	TRACE : 가장 상세한 정보를 나타낼 때 사용한다. 
+	DEBUG : 일반 정보를 상세히 나타낼 때 사용한다. 
+	INFO : 일반 정보를 나타낼 때 사용한다. 
+	WARN : 에러는 아니지만 주의할 필요가 있을 때 사용한다. 
+	ERROR : 일반 에러가 일어 났을 때 사용한다. 
+	FATAL : 가장 크리티컬한 에러가 일어 났을 때 사용한다. 
+	
+	# Options 
+	%d : 로깅 이벤트가 일어난 날자(date)
+	%p : 로깅 이벤트의 priority 
+	%t : 로깅 이벤트를 생성한 스레드 이름
+	%F : 로깅요청을 일으킨 파일 이름 
+	%m : 메세지 %n : 플랫폼 독립적인 개행문자
+ -->
+   
+
+<Configuration>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%m%n" />
+		</Console>
+
+		<File name="file" fileName="./logs/database_setting.log" append="true">
+			<PatternLayout pattern="[%d{yyyy-MM-dd}] %m%n" />
+		</File>
+		<!-- 일자별 로그 -->
+		<!-- 특정크기마다 백업하여 로그 -->		
+	</Appenders>
+	<Loggers>
+		<Logger name="database_setting" level="trace" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="file" />
+		</Logger>
+	</Loggers>
+</Configuration>
+

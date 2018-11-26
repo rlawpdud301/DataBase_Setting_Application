@@ -1,0 +1,121 @@
+-- db 존재하면삭제
+drop database if exists coffee2;
+--db 생성
+create database coffee2;
+--db 선택
+use coffee2;
+-- 제품
+CREATE TABLE product (
+	code CHAR(4)     NOT NULL COMMENT '코드', -- 코드
+	name VARCHAR(20) NOT NULL COMMENT '제품명' -- 제품명
+)
+COMMENT '제품';
+
+-- 제품
+ALTER TABLE product
+	ADD CONSTRAINT PK_product -- 제품 기본키
+		PRIMARY KEY (
+			code -- 코드
+		);
+
+
+-- 판매정보
+CREATE TABLE sale (
+	no         INT(11) NOT NULL COMMENT '번호', -- 번호
+	code       CHAR(4) NOT NULL COMMENT '제품코드', -- 제품코드
+	price      INT(11) NOT NULL COMMENT '제품단가', -- 제품단가
+	saleCnt    INT(11) NOT NULL COMMENT '판매량', -- 판매량
+	marginRate INT(11) NOT NULL COMMENT '마진율' -- 마진율
+)
+COMMENT '판매정보';
+
+-- 판매정보
+ALTER TABLE sale
+	ADD CONSTRAINT PK_sale -- 판매정보 기본키
+		PRIMARY KEY (
+			no -- 번호
+		);
+
+-- 판매정보
+ALTER TABLE sale
+	ADD CONSTRAINT FK_product_TO_sale -- 제품 -> 판매정보
+		FOREIGN KEY (
+			code -- 제품코드
+		)
+		REFERENCES product ( -- 제품
+			code -- 코드
+		);
+
+ALTER TABLE sale
+	MODIFY COLUMN no INT(11) NOT NULL AUTO_INCREMENT COMMENT '번호';
+
+-- 판매세부정보
+CREATE TABLE saledetail (
+	no           INT(11) NOT NULL , -- 번호
+	sale_price   INT(11) NOT NULL , -- 새 컬럼2
+	addTax       INT(11) NOT NULL , -- 새 컬럼3
+	supply_price INT(11) NOT NULL , -- 새 컬럼4
+	margin_price INT(11) NOT NULL 
+)
+COMMENT '판매세부정보';
+
+-- 판매세부정보
+ALTER TABLE saledetail
+	ADD CONSTRAINT FK_sale_TO_saledetail -- 판매정보 -> 판매세부정보
+		FOREIGN KEY (
+			no -- 번호
+		)
+		REFERENCES sale ( -- 판매정보
+			no -- 번호
+		);
+
+
+-- 통합
+CREATE TABLE salefull (
+	no           INT(11) NOT NULL, -- 새 컬럼
+	code         CHAR(4) NOT NULL, -- 코드
+	price        INT(11) NOT NULL, -- 새 컬럼3
+	saleCnt      INT(11) NOT NULL, -- 새 컬럼4
+	marginRate   INT(11) NOT NULL, -- 새 컬럼5
+	sale_price   INT(11) NOT NULL, -- 새 컬럼6
+	addtax       INT(11) NOT NULL, -- 새 컬럼7
+	supply_price INT(11) NOT NULL, -- 새 컬럼8
+	margin_price INT(11) NOT NULL
+)
+COMMENT '통합';
+
+-- 통합
+ALTER TABLE salefull
+	ADD CONSTRAINT PK_salefull -- 통합 기본키
+		PRIMARY KEY (
+			no -- 새 컬럼
+		);
+
+ALTER TABLE salefull
+	MODIFY COLUMN no INT(11) NOT NULL AUTO_INCREMENT COMMENT '새 컬럼';
+
+
+
+
+
+-- 통합
+ALTER TABLE salefull
+	ADD CONSTRAINT FK_product_TO_salefull -- 제품 -> 통합
+		FOREIGN KEY (
+			code -- 코드
+		)
+		REFERENCES product ( -- 제품
+			code -- 코드
+		);
+		
+		
+-- procedure drop
+DROP PROCEDER if exists proc_saledetail_orderby;
+DROP PROCEDER if exists proc_sale_stat;
+
+-- trigger drop
+DROP TRIGGER if exists tri_sale_insert_after_detail;
+DROP TRIGGER if exists tri_sale_update_after_detail;
+DROP TRIGGER if exists tri_sale_delete_after_detail;
+
+
